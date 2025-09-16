@@ -1,19 +1,7 @@
-# Project name used for resource naming
-project_name = "health-assistant"
-
-# Your Production Google Cloud project id
-prod_project_id = "your-production-project-id"
-
-# Your Staging / Test Google Cloud project id
-staging_project_id = "your-staging-project-id"
-
-# Your Google Cloud project ID that will be used to host the Cloud Build pipelines.
-cicd_runner_project_id = "your-cicd-project-id"
-
-# Name of the repository you added to Cloud Build
-repository_name = "health-assistant"
-
-# The Google Cloud region you will use to deploy the infrastructure
+staging_project_id = "qwiklabs-gcp-00-a489584c5286"
+prod_project_id = "qwiklabs-gcp-01-4966a7ce7870"
+cicd_runner_project_id = "qwiklabs-gcp-01-4966a7ce7870"
 region = "europe-west3"
-
-repository_owner = "Your GitHub organization or username."
+repository_name = "zoi-agentic-era-hackathon"
+repository_owner = "NithinKumaraNT"
+create_repository = false

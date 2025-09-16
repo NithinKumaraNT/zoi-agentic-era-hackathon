@@ -3,6 +3,12 @@
 A base ReAct agent built with Google's Agent Development Kit (ADK)
 Agent generated with [`googleCloudPlatform/agent-starter-pack`](https://github.com/GoogleCloudPlatform/agent-starter-pack) version `0.14.1`
 
+
+## Project codes
+
+staging : qwiklabs-gcp-00-a489584c5286
+prod : qwiklabs-gcp-01-4966a7ce7870
+
 ## Project Structure
 
 This project is organized as follows:
