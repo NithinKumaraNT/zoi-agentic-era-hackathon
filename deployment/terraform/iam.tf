@@ -93,3 +93,23 @@ resource "google_service_account_iam_member" "cicd_run_invoker_account_user" {
   member             = "serviceAccount:${resource.google_service_account.cicd_runner_sa.email}"
   depends_on         = [resource.google_project_service.cicd_services, resource.google_project_service.deploy_project_services]
 }
+
+# Allow CICD SA to impersonate the app service accounts for deployment
+resource "google_service_account_iam_member" "cicd_impersonate_app_sa" {
+  for_each = local.deploy_project_ids
+
+  service_account_id = google_service_account.app_sa[each.key].name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:${resource.google_service_account.cicd_runner_sa.email}"
+  depends_on         = [resource.google_project_service.cicd_services, resource.google_project_service.deploy_project_services]
+}
+
+# Allow CICD SA to impersonate the MCP toolbox service accounts for deployment
+resource "google_service_account_iam_member" "cicd_impersonate_mcp_toolbox_sa" {
+  for_each = local.deploy_project_ids
+
+  service_account_id = google_service_account.mcp_toolbox_sa[each.key].name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:${resource.google_service_account.cicd_runner_sa.email}"
+  depends_on         = [resource.google_project_service.cicd_services, resource.google_project_service.deploy_project_services]
+}
