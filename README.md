@@ -9,6 +9,21 @@ Agent generated with [`googleCloudPlatform/agent-starter-pack`](https://github.c
 staging : qwiklabs-gcp-00-a489584c5286
 prod : qwiklabs-gcp-01-4966a7ce7870
 
+## Working request
+
+curl \                      
+-H "Authorization: Bearer $(gcloud auth print-access-token)" \
+-H "Content-Type: application/json" \
+https://europe-west3-aiplatform.googleapis.com/v1/projects/579492671276/locations/europe-west3/reasoningEngines/7789468136746516480:streamQuery\?alt\=sse -d '{
+  "class_method": "stream_query",
+  "input": {
+    "message": "What is the exchange rate from US dollars to Swedish Krona today?",
+    "user_id": "test_user"
+  }
+}'
+
+https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/use/overview#requests_3
+
 ## Project Structure
 
 This project is organized as follows:
