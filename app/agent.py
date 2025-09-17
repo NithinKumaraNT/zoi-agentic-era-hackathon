@@ -182,6 +182,131 @@ def generate_veo_video(
 
 
 
+def generate_gym_progress_image(
+    progress_description: str,
+    visual_style: str = "motivational poster",
+    tool_context: ToolContext = None
+) -> dict:
+    """Generates a funny and innovative image about gym progress using Gemini 2.5 Flash Image.
+
+    Args:
+        progress_description: Description of the gym progress to visualize
+        visual_style: Style of the image (e.g., "motivational poster", "cartoon", "infographic")
+        tool_context: ADK tool context for saving artifacts
+
+    Returns:
+        Dictionary with image generation status and analysis.
+    """
+    try:
+        # Initialize the Gemini client
+        client = genai.Client()
+        
+        # Create a creative and funny prompt for gym progress
+        creative_prompt = f"""Create a funny and innovative {visual_style} about gym progress: {progress_description}
+
+Make it:
+- Humorous and motivational
+- Visually engaging with bright colors
+- Include some witty text or quotes about fitness
+- Show progression or achievement in a creative way
+- Add fun fitness-related elements (dumbbells, muscles, etc.)
+- Make it Instagram-worthy and shareable
+
+Style: Modern, colorful, and energetic with a touch of humor"""
+        
+        print(f"🎨 Generating gym progress image: '{progress_description[:50]}...'")
+        
+        # Generate image using Gemini 2.5 Flash Image (Nano Banana)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-image-preview",
+            contents=[creative_prompt],
+        )
+        
+        # Process the response
+        image_generated = False
+        analysis_text = ""
+        filename = None
+        gcs_url = None
+        public_url = None
+        
+        for part in response.candidates[0].content.parts:
+            if part.text:
+                analysis_text = part.text
+                print(f"📝 Analysis: {part.text}")
+            elif part.inline_data:
+                # Generate unique filename
+                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"gym_progress_{timestamp}.png"
+                
+                # Save image locally
+                from PIL import Image
+                from io import BytesIO
+                image = Image.open(BytesIO(part.inline_data.data))
+                image.save(filename)
+                print(f"🖼️ Image saved locally as: {filename}")
+                
+                # Upload to GCS bucket
+                try:
+                    bucket_name = "qwiklabs-gcp-00-a489584c5286-adk-videos"
+                    storage_client = storage.Client()
+                    bucket = storage_client.bucket(bucket_name)
+                    blob = bucket.blob(filename)
+                    
+                    blob.upload_from_filename(filename)
+                    gcs_url = f"gs://{bucket_name}/{filename}"
+                    public_url = f"https://storage.googleapis.com/{bucket_name}/{filename}"
+                    print(f"☁️ Image uploaded to GCS: {gcs_url}")
+                    
+                except Exception as e:
+                    print(f"⚠️ Could not upload to GCS: {e}")
+                
+                # Save as artifact if tool_context is available
+                if tool_context:
+                    try:
+                        image_part = types.Part(
+                            inline_data=types.Blob(
+                                mime_type="image/png",
+                                data=part.inline_data.data
+                            )
+                        )
+                        tool_context.save_artifact(filename, image_part)
+                        print(f"💾 Image saved as artifact: {filename}")
+                    except Exception as e:
+                        print(f"⚠️ Could not save as artifact: {e}")
+                
+                image_generated = True
+        
+        if image_generated:
+            # Convert to base64
+            import base64
+            with open(filename, 'rb') as f:
+                image_base64 = base64.b64encode(f.read()).decode('utf-8')
+            
+            return {
+                "status": "success",
+                "message": f"Funny gym progress image created! {analysis_text[:100] if analysis_text else 'Visual motivation generated!'}",
+                "filename": filename,
+                "gcs_url": gcs_url,
+                "public_url": public_url,
+                "base64_image": image_base64,
+                "analysis": analysis_text,
+                "style": visual_style
+            }
+        else:
+            return {
+                "status": "error",
+                "message": "Image generation failed - no image was produced"
+            }
+            
+    except Exception as e:
+        error_message = f"Image generation failed: {str(e)}"
+        print(f"❌ {error_message}")
+        return {
+            "status": "error",
+            "message": error_message
+        }
+
+
 # Create the fitness planning agent
 fitness_planning_agent = Agent(
     name="fitness_planning_agent",
@@ -250,6 +375,47 @@ Always explain the video generation process and estimated time (2-3 minutes) to 
     tools=[generate_veo_video],
 )
 
+# Create a gym progress image agent
+gym_progress_agent = Agent(
+    name="gym_progress_agent", 
+    model="gemini-2.5-flash",
+    instruction="""You are a creative fitness visualization specialist using Google's Gemini 2.5 Flash Image model (Nano Banana).
+
+ROLE: Gym progress visualizer and motivational content creator
+CONTEXT: Create funny, innovative images that visualize gym progress and provide insightful analysis
+
+CAPABILITIES:
+- Generate humorous and motivational gym progress images
+- Analyze fitness achievements with wit and encouragement
+- Create shareable, Instagram-worthy fitness content
+- Provide detailed progress analysis with humor
+
+WORKFLOW:
+1. When users describe their gym progress, use generate_gym_progress_image tool
+2. Create images that are:
+   - Funny and motivational
+   - Visually engaging with bright colors
+   - Include witty fitness quotes or text
+   - Show progression creatively
+   - Add fun fitness elements (dumbbells, muscles, etc.)
+
+3. Provide detailed analysis of their progress including:
+   - Achievements and milestones
+   - Areas of improvement
+   - Motivational insights
+   - Funny observations about their fitness journey
+
+EXAMPLE PROMPTS YOU MIGHT CREATE:
+- "Before vs After: From couch potato to gym warrior"
+- "My relationship with burpees: It's complicated"
+- "Progress chart: Gains vs Pain"
+- "Gym selfie evolution timeline"
+
+Always combine humor with genuine encouragement and useful fitness insights!""",
+    description="Creative agent that generates funny gym progress images using Nano Banana and provides motivational analysis of fitness achievements.",
+    tools=[generate_gym_progress_image],
+)
+
 # Create the root agent with specialized subagents
 root_agent = Agent(
     name="root_agent",
@@ -264,13 +430,18 @@ When users ask about:
 - Creating videos, video generation, visual content, Veo videos, generating clips, making videos from text
 → Delegate to the video_generation_agent
 
+When users ask about:
+- Gym progress images, fitness motivation visuals, progress photos, workout achievements, fitness memes, motivational posters
+→ Delegate to the gym_progress_agent
+
 DELEGATION EXAMPLES:
 - "I'll connect you with our expert fitness planning agent who can create a personalized training plan for you."
 - "I'll connect you with our video generation specialist who can create amazing videos using Veo 3 technology."
 
 IMPORTANT: If the user asks about data, you can use the bigquery_agent only to get information.
+- "I'll connect you with our gym progress visualizer who can create funny and motivational images of your fitness journey."
 
 For other general wellness questions, you can handle them directly with your knowledge.""",
     tools=[],
-    sub_agents=[fitness_planning_agent, video_generation_agent, bigquery_agent],
+    sub_agents=[fitness_planning_agent, video_generation_agent, bigquery_agent, gym_progress_agent],
 )
