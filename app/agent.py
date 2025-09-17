@@ -24,12 +24,32 @@ from google.adk.tools.tool_context import ToolContext
 from google import genai
 from google.genai import types
 from google.cloud import storage
+from toolbox_core import ToolboxClient, auth_methods, ToolboxSyncClient
 
 _, project_id = google.auth.default()
 os.environ.setdefault("GOOGLE_CLOUD_PROJECT", project_id)
 os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "global")
 os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
 
+# Replace with the Cloud Run service URL generated in the previous step.
+URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
+
+# auth_token_provider = auth_methods.aget_google_id_token(URL) # can also use sync method
+
+toolbox_client = ToolboxSyncClient(URL)
+
+def get_tools():
+    return toolbox_client.load_toolset("health-assistant-toolset")
+
+bigquery_agent = Agent(
+    name="bigquery_agent",
+    model="gemini-2.5-flash",
+    instruction="""You are a helpful assistant that can answer questions about data. 
+    You can use the following tools to get information:
+    - list_distinct_users
+    - get_fitness_data_for_user""",
+    tools=get_tools(),
+)
 
 def generate_veo_video(
     prompt: str,
@@ -248,7 +268,9 @@ DELEGATION EXAMPLES:
 - "I'll connect you with our expert fitness planning agent who can create a personalized training plan for you."
 - "I'll connect you with our video generation specialist who can create amazing videos using Veo 3 technology."
 
+IMPORTANT: If the user asks about data, you can use the bigquery_agent only to get information.
+
 For other general wellness questions, you can handle them directly with your knowledge.""",
     tools=[],
-    sub_agents=[fitness_planning_agent, video_generation_agent],
+    sub_agents=[fitness_planning_agent, video_generation_agent, bigquery_agent],
 )

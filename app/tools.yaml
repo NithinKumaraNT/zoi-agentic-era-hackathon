@@ -22,6 +22,7 @@ tools:
         required: true
     statement: |
         SELECT * FROM `qwiklabs-gcp-00-a489584c5286.health_metrics.fitness_data` WHERE email = @email;
+  write_reports_to_bigquery:
  
 toolsets:
   health-assistant-toolset:
