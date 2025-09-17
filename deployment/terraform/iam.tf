@@ -60,6 +60,22 @@ resource "google_project_iam_member" "app_sa_roles" {
   depends_on = [resource.google_project_service.cicd_services, resource.google_project_service.deploy_project_services]
 }
 
+# 4. Grant MCP toolbox SA the required permissions for database operations
+resource "google_project_iam_member" "mcp_toolbox_sa_roles" {
+  for_each = {
+    for pair in setproduct(keys(local.deploy_project_ids), var.mcp_toolbox_sa_roles) :
+    join(",", pair) => {
+      project = local.deploy_project_ids[pair[0]]
+      role    = pair[1]
+    }
+  }
+
+  project    = each.value.project
+  role       = each.value.role
+  member     = "serviceAccount:${google_service_account.mcp_toolbox_sa[split(",", each.key)[0]].email}"
+  depends_on = [resource.google_project_service.cicd_services, resource.google_project_service.deploy_project_services]
+}
+
 
 
 

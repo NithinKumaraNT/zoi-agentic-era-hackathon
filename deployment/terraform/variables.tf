@@ -75,6 +75,22 @@ variable "app_sa_roles" {
   ]
 }
 
+variable "mcp_toolbox_sa_roles" {
+  description = "List of roles to assign to the MCP toolbox service account for database operations"
+  type        = list(string)
+  default = [
+    "roles/cloudsql.client",
+    "roles/bigquery.dataViewer",
+    "roles/bigquery.jobUser",
+    "roles/spanner.databaseReader",
+    "roles/spanner.databaseUser",
+    "roles/logging.logWriter",
+    "roles/cloudtrace.agent",
+    "roles/secretmanager.secretAccessor",
+    "roles/secretmanager.viewer"
+  ]
+}
+
 variable "cicd_roles" {
   description = "List of roles to assign to the CICD runner service account in the CICD project"
   type        = list(string)
@@ -85,7 +101,10 @@ variable "cicd_roles" {
     "roles/logging.logWriter",
     "roles/cloudtrace.agent",
     "roles/artifactregistry.writer",
-    "roles/cloudbuild.builds.builder"
+    "roles/cloudbuild.builds.builder",
+    "roles/iam.serviceAccountCreator",
+    "roles/secretmanager.admin",
+    "roles/run.developer"
   ]
 }
 
@@ -95,7 +114,9 @@ variable "cicd_sa_deployment_required_roles" {
   default = [    
     "roles/iam.serviceAccountUser",
     "roles/aiplatform.user",
-    "roles/storage.admin"
+    "roles/storage.admin",
+    "roles/run.developer",
+    "roles/secretmanager.admin"
   ]
 }
 

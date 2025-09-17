@@ -18,6 +18,21 @@ from zoneinfo import ZoneInfo
 
 import google.auth
 from google.adk.agents import Agent
+from toolbox_core import ToolboxClient, auth_methods, ToolboxSyncClient
+
+# Replace with the Cloud Run service URL generated in the previous step.
+URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
+
+auth_token_provider = auth_methods.aget_google_id_token(URL) # can also use sync method
+
+toolbox_client = ToolboxSyncClient(
+    URL,
+    client_headers={"Authorization": auth_token_provider}
+    )
+
+
+def get_tools():
+    return toolbox_client.load_toolset("health-assistant-toolset")
 
 _, project_id = google.auth.default()
 os.environ.setdefault("GOOGLE_CLOUD_PROJECT", project_id)
@@ -61,6 +76,11 @@ def get_current_time(query: str) -> str:
 root_agent = Agent(
     name="root_agent",
     model="gemini-2.5-flash",
-    instruction="You are a helpful AI assistant designed to provide accurate and useful information.",
-    tools=[get_weather, get_current_time],
+    instruction="""
+    You are a helpful AI assistant designed to provide accurate and useful information.
+    You can use the following tools to get information:
+    - list_distinct_users
+    - get_fitness_data_for_user
+    """,
+    tools=get_tools(),
 )

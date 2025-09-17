@@ -20,7 +20,11 @@ locals {
     "serviceusage.googleapis.com",
     "bigquery.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "cloudtrace.googleapis.com"
+    "cloudtrace.googleapis.com",
+    "run.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "iam.googleapis.com",
+    "secretmanager.googleapis.com"
   ]
 
   deploy_project_services = [
@@ -33,6 +37,9 @@ locals {
     "serviceusage.googleapis.com",
     "logging.googleapis.com",
     "cloudtrace.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "secretmanager.googleapis.com"
   ]
 
   deploy_project_ids = {

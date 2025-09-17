@@ -24,6 +24,12 @@ https://europe-west3-aiplatform.googleapis.com/v1/projects/579492671276/location
 
 https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/use/overview#requests_3
 
+
+## MCP Toolset
+
+https://googleapis.github.io/genai-toolbox/how-to/deploy_toolbox/
+
+
 ## Project Structure
 
 This project is organized as follows:

@@ -40,6 +40,14 @@ resource "google_service_account" "app_sa" {
   depends_on   = [resource.google_project_service.services]
 }
 
+# MCP toolbox service account for databases
+resource "google_service_account" "mcp_toolbox_sa" {
+  account_id   = "${var.project_name}-mcp-toolbox"
+  display_name = "${var.project_name} MCP Toolbox Service Account"
+  project      = var.dev_project_id
+  depends_on   = [resource.google_project_service.services]
+}
+
 # Grant application SA the required permissions to run the application
 resource "google_project_iam_member" "app_sa_roles" {
   for_each = {
@@ -56,6 +64,22 @@ resource "google_project_iam_member" "app_sa_roles" {
   depends_on = [resource.google_project_service.services]
 }
 
+
+# Grant MCP toolbox SA the required permissions for database operations
+resource "google_project_iam_member" "mcp_toolbox_sa_roles" {
+  for_each = {
+    for pair in setproduct(keys(local.project_ids), var.mcp_toolbox_sa_roles) :
+    join(",", pair) => {
+      project = local.project_ids[pair[0]]
+      role    = pair[1]
+    }
+  }
+
+  project    = each.value.project
+  role       = each.value.role
+  member     = "serviceAccount:${google_service_account.mcp_toolbox_sa.email}"
+  depends_on = [resource.google_project_service.services]
+}
 
 # Grant required permissions to Vertex AI service account for Agent Engine
 resource "google_project_iam_member" "vertex_ai_sa_permissions" {

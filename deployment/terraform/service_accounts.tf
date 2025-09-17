@@ -28,4 +28,14 @@ resource "google_service_account" "app_sa" {
   depends_on   = [resource.google_project_service.cicd_services, resource.google_project_service.deploy_project_services]
 }
 
+# MCP toolbox service account for databases
+resource "google_service_account" "mcp_toolbox_sa" {
+  for_each = local.deploy_project_ids
+
+  account_id   = "${var.project_name}-mcp-toolbox"
+  display_name = "${var.project_name} MCP Toolbox Service Account"
+  project      = each.value
+  depends_on   = [resource.google_project_service.cicd_services, resource.google_project_service.deploy_project_services]
+}
+
 

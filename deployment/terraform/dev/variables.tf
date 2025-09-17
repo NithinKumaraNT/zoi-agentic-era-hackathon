@@ -54,3 +54,19 @@ variable "app_sa_roles" {
   ]
 }
 
+variable "mcp_toolbox_sa_roles" {
+  description = "List of roles to assign to the MCP toolbox service account for database operations"
+  type        = list(string)
+  default = [
+    "roles/cloudsql.client",
+    "roles/bigquery.dataViewer",
+    "roles/bigquery.jobUser",
+    "roles/spanner.databaseReader",
+    "roles/spanner.databaseUser",
+    "roles/logging.logWriter",
+    "roles/cloudtrace.agent",
+    "roles/secretmanager.secretAccessor",
+    "roles/secretmanager.viewer"
+  ]
+}
+
