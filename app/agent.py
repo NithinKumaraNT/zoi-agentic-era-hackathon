@@ -288,7 +288,7 @@ Style: Modern, colorful, and energetic with a touch of humor"""
                 "filename": filename,
                 "gcs_url": gcs_url,
                 "public_url": public_url,
-                "base64_image": image_base64,
+                # "base64_image": image_base64,
                 "analysis": analysis_text,
                 "style": visual_style
             }
@@ -313,29 +313,15 @@ fitness_planning_agent = Agent(
     model="gemini-2.5-flash",
     instruction="""You are an expert personal trainer and sports scientist specializing in data-driven fitness coaching.
 
-ROLE: Expert personal trainer and sports scientist
-CONTEXT: Generate comprehensive 1-week training plans based on user's complete health and fitness data
-
 WORKFLOW:
-1. Start with: "Hello, welcome back!"
-2. Analyze the provided health data (age, gender, BMI, heart rate, sleep, activity level, experience, goals, preferences)
-3. Explain (1-2 sentences) how their health data influences your plan design
-4. Create a detailed 7-day training schedule that considers:
-   - Their fitness experience and current activity level
-   - Cardiovascular health (heart rate, blood pressure)
-   - Weight goals (current vs target weight)
-   - Sleep patterns and recovery needs
-   - Daily activity (steps, calories burned)
-   - Exercise preferences and frequency
-   - Any dietary restrictions or constraints
+1. FIRST: Ask for user's email address if not provided
+2. Start with: "Hello, welcome back!"
+3. Analyze their health data and create personalized 7-day training plan
+4. End by asking for feedback
 
-5. Specify intensity using heart rate zones and specific sets/reps/rest periods
-6. Include proper warm-up and cool-down for each workout day
-7. End by asking for feedback about the plan
+IMPORTANT: Always get email first, then generate completely personalized plans based on their health profile.
 
-IMPORTANT: Generate completely personalized plans. Each person's plan should be unique based on their specific health profile, goals, and preferences.
-
-Present everything in clear, well-structured Markdown format.""",
+Present everything in clear Markdown format.""",
     description="Expert fitness planning agent that creates personalized weekly training plans by directly analyzing comprehensive user health data without intermediate processing tools.",
     tools=[],  # No tools needed - Gemini analyzes data directly
 )
@@ -379,39 +365,14 @@ Always explain the video generation process and estimated time (2-3 minutes) to 
 gym_progress_agent = Agent(
     name="gym_progress_agent", 
     model="gemini-2.5-flash",
-    instruction="""You are a creative fitness visualization specialist using Google's Gemini 2.5 Flash Image model (Nano Banana).
-
-ROLE: Gym progress visualizer and motivational content creator
-CONTEXT: Create funny, innovative images that visualize gym progress and provide insightful analysis
-
-CAPABILITIES:
-- Generate humorous and motivational gym progress images
-- Analyze fitness achievements with wit and encouragement
-- Create shareable, Instagram-worthy fitness content
-- Provide detailed progress analysis with humor
+    instruction="""You are a creative fitness visualization specialist using Nano Banana (Gemini 2.5 Flash Image).
 
 WORKFLOW:
-1. When users describe their gym progress, use generate_gym_progress_image tool
-2. Create images that are:
-   - Funny and motivational
-   - Visually engaging with bright colors
-   - Include witty fitness quotes or text
-   - Show progression creatively
-   - Add fun fitness elements (dumbbells, muscles, etc.)
+1. Ask for user's email
+2. Use generate_gym_progress_image tool with their email - it fetches real BigQuery data automatically
+3. Generate funny motivational images based on their actual progress data
 
-3. Provide detailed analysis of their progress including:
-   - Achievements and milestones
-   - Areas of improvement
-   - Motivational insights
-   - Funny observations about their fitness journey
-
-EXAMPLE PROMPTS YOU MIGHT CREATE:
-- "Before vs After: From couch potato to gym warrior"
-- "My relationship with burpees: It's complicated"
-- "Progress chart: Gains vs Pain"
-- "Gym selfie evolution timeline"
-
-Always combine humor with genuine encouragement and useful fitness insights!""",
+Just get email and generate image!""",
     description="Creative agent that generates funny gym progress images using Nano Banana and provides motivational analysis of fitness achievements.",
     tools=[generate_gym_progress_image],
 )
@@ -438,7 +399,7 @@ DELEGATION EXAMPLES:
 - "I'll connect you with our expert fitness planning agent who can create a personalized training plan for you."
 - "I'll connect you with our video generation specialist who can create amazing videos using Veo 3 technology."
 
-IMPORTANT: If the user asks about data, you can use the bigquery_agent only to get information.
+IMPORTANT: If the user asks about data, you can use the bigquery_agent only to get information, so ask email from user to get info and then do next.
 - "I'll connect you with our gym progress visualizer who can create funny and motivational images of your fitness journey."
 
 For other general wellness questions, you can handle them directly with your knowledge.""",
