@@ -84,9 +84,7 @@ def get_current_time(query: str) -> str:
     return f"The current time for query {query} is {now.strftime('%Y-%m-%d %H:%M:%S %Z%z')}"
 
 
-def create_root_agent():
-    """Create the root agent with lazy tool loading."""
-    return Agent(
+root_agent = Agent(
         name="root_agent",
         model="gemini-2.5-flash",
         instruction="""
@@ -97,7 +95,3 @@ def create_root_agent():
         """,
         tools=get_tools(),
     )
-
-# For backward compatibility, create the agent when imported
-# This will only be called when the module is actually used, not during uv export
-root_agent = None
