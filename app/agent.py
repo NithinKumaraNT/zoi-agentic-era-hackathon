@@ -15,6 +15,7 @@
 import datetime
 import os
 from zoneinfo import ZoneInfo
+from typing import Optional
 
 import google.auth
 from google.adk.agents import Agent
@@ -23,15 +24,25 @@ from toolbox_core import ToolboxClient, auth_methods, ToolboxSyncClient
 # Replace with the Cloud Run service URL generated in the previous step.
 URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
 
-auth_token_provider = auth_methods.aget_google_id_token(URL) # can also use sync method
+# Lazy initialization of toolbox client
+_toolbox_client: Optional[ToolboxSyncClient] = None
 
-toolbox_client = ToolboxSyncClient(
-    URL,
-    client_headers={"Authorization": auth_token_provider}
-    )
+
+def get_toolbox_client():
+    """Get or create the toolbox client with lazy initialization."""
+    global _toolbox_client
+    if _toolbox_client is None:
+        auth_token_provider = auth_methods.aget_google_id_token(URL)
+        _toolbox_client = ToolboxSyncClient(
+            URL,
+            client_headers={"Authorization": auth_token_provider}
+        )
+    return _toolbox_client
 
 
 def get_tools():
+    """Get tools from the toolbox client with lazy initialization."""
+    toolbox_client = get_toolbox_client()
     return toolbox_client.load_toolset("health-assistant-toolset")
 
 _, project_id = google.auth.default()
@@ -73,14 +84,20 @@ def get_current_time(query: str) -> str:
     return f"The current time for query {query} is {now.strftime('%Y-%m-%d %H:%M:%S %Z%z')}"
 
 
-root_agent = Agent(
-    name="root_agent",
-    model="gemini-2.5-flash",
-    instruction="""
-    You are a helpful AI assistant designed to provide accurate and useful information.
-    You can use the following tools to get information:
-    - list_distinct_users
-    - get_fitness_data_for_user
-    """,
-    tools=get_tools(),
-)
+def create_root_agent():
+    """Create the root agent with lazy tool loading."""
+    return Agent(
+        name="root_agent",
+        model="gemini-2.5-flash",
+        instruction="""
+        You are a helpful AI assistant designed to provide accurate and useful information.
+        You can use the following tools to get information:
+        - list_distinct_users
+        - get_fitness_data_for_user
+        """,
+        tools=get_tools(),
+    )
+
+# For backward compatibility, create the agent when imported
+# This will only be called when the module is actually used, not during uv export
+root_agent = None
