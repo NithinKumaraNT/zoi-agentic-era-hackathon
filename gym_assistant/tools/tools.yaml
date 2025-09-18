@@ -100,9 +100,65 @@ tools:
           @fitness_goals, 
           @health_notes
         );
+  add_workout_plan:
+    kind: bigquery-sql
+    source: health-assistant-bigquery-source
+    description: |
+      Use this tool to add a workout plan for a specific user.
+    parameters:
+      - name: email
+        type: string
+        description: The email of the user to add the workout plan for.
+        required: true
+      - name: date
+        type: string
+        description: The date of the workout plan for the day (YYYY-MM-DD).
+        required: true
+      - name: day
+        type: string
+        description: The day of the workout plan (e.g., Monday).
+        required: true
+      - name: goal
+        type: string
+        description: The goal of the workout plan for the day.
+        required: true
+      - name: warm_up_phase
+        type: string
+        description: The warm-up phase details.
+        required: true
+      - name: main_workout_phase
+        type: string
+        description: The main workout phase details.
+        required: true
+      - name: cool_down_phase
+        type: string
+        description: The cool-down phase details.
+        required: true
+    statement: |
+      INSERT INTO `qwiklabs-gcp-00-a489584c5286.health_metrics.workout_plans`
+        (
+          email,
+          date,
+          day,
+          goal,
+          warm_up_phase,
+          main_workout_phase,
+          cool_down_phase
+        )
+      VALUES
+        (
+          @email,
+          @date,
+          @day,
+          @goal,
+          @warm_up_phase,
+          @main_workout_phase,
+          @cool_down_phase
+        );
 toolsets:
   health-assistant-toolset:
     - list_distinct_users
     - get_fitness_data_for_user
     - register_user
+    - add_workout_plan
 

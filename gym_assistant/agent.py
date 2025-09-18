@@ -20,10 +20,10 @@ from google.adk.agents import Agent
 import time
 from typing import Optional
 from google.adk.tools.tool_context import ToolContext
-from app.sub_agents.bigquery_agent import bigquery_agent
-from app.sub_agents.fitness_planning_agent import fitness_planning_agent
-from app.sub_agents.video_generation_agent import video_generation_agent
-from app.sub_agents.user_registration_agent import user_registration_agent
+from gym_assistant.sub_agents.bigquery_agent import bigquery_agent
+from gym_assistant.sub_agents.fitness_planning_agent import fitness_planning_agent
+from gym_assistant.sub_agents.video_generation_agent import video_generation_agent
+from gym_assistant.sub_agents.user_registration_agent import user_registration_agent
 from google import genai
 from google.genai import types
 from google.cloud import storage
