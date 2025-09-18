@@ -62,6 +62,7 @@ jobs:
             --project ${{ vars.STAGING_PROJECT_ID }} \
             --location ${{ vars.REGION }} \
             --service-account ${{ vars.APP_SA_EMAIL_STAGING }} \
+            --extra-packages app \
             --set-env-vars="COMMIT_SHA=${{ github.sha }}"
 
       - name: Fetch Auth Token
