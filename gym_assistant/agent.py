@@ -24,6 +24,7 @@ from gym_assistant.sub_agents.bigquery_agent import bigquery_agent
 from gym_assistant.sub_agents.fitness_planning_agent import fitness_planning_agent
 from gym_assistant.sub_agents.video_generation_agent import video_generation_agent
 from gym_assistant.sub_agents.user_registration_agent import user_registration_agent
+from gym_assistant.sub_agents.gym_progress_report_agent import gym_progress_agent
 from google import genai
 from google.genai import types
 from google.cloud import storage
@@ -56,7 +57,13 @@ IMPORTANT: If the user asks about data, you can use the bigquery_agent only to g
 
 For other general wellness questions, you can handle them directly with your knowledge.""",
     tools=[],
-    sub_agents=[fitness_planning_agent, video_generation_agent, bigquery_agent, user_registration_agent],
+    sub_agents=[
+        fitness_planning_agent, 
+        video_generation_agent, 
+        bigquery_agent, 
+        user_registration_agent,
+        gym_progress_agent
+    ],
 )
 
 root_agent = gym_assistant
