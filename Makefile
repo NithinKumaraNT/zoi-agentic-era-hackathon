@@ -17,7 +17,7 @@ playground-api:
 	@echo "|                                                                             |"
 	@echo "| 🔍 IMPORTANT: Select the 'app' folder to interact with your agent.          |"
 	@echo "==============================================================================="
-	cd gym_assistant && uv run adk api_server --allow_origins="*"
+	cd app && uv run adk api_server --allow_origins="*"
 
 # Deploy the agent remotely
 backend:

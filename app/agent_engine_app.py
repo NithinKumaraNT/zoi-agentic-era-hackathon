@@ -67,14 +67,15 @@ class AgentEngineApp(AdkApp):
     def clone(self) -> "AgentEngineApp":
         """Returns a clone of the ADK application."""
         template_attributes = self._tmpl_attrs
-
+    
+        # Instead of deep copying, recreate the agent from scratch
+        from app.agent import root_agent  # Re-import to get a fresh instance
+        
         return self.__class__(
-            agent=copy.deepcopy(template_attributes["agent"]),
+            agent=root_agent,  # Use fresh instance instead of deep copy
             enable_tracing=bool(template_attributes.get("enable_tracing", False)),
             session_service_builder=template_attributes.get("session_service_builder"),
-            artifact_service_builder=template_attributes.get(
-                "artifact_service_builder"
-            ),
+            artifact_service_builder=template_attributes.get("artifact_service_builder"),
             env_vars=template_attributes.get("env_vars"),
         )
 
