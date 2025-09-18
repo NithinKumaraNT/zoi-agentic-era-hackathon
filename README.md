@@ -23,39 +23,6 @@ The system uses multiple specialized agents working together to provide comprehe
 
 ![Agent Interaction Sequence](docs/assets/agents_interaction_seq_diagram.png)
 
-
-## Project codes
-
-staging : qwiklabs-gcp-00-a489584c5286
-prod : qwiklabs-gcp-01-4966a7ce7870
-
-## Working request
-
-curl \                      
--H "Authorization: Bearer $(gcloud auth print-access-token)" \
--H "Content-Type: application/json" \
-https://europe-west3-aiplatform.googleapis.com/v1/projects/579492671276/locations/europe-west3/reasoningEngines/7789468136746516480:streamQuery\?alt\=sse -d '{
-  "class_method": "stream_query",
-  "input": {
-    "message": "list the users?",
-    "user_id": "test_user"
-  }
-}'
-
-https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/use/overview#requests_3
-
-
-## MCP Toolset
-
-https://googleapis.github.io/genai-toolbox/how-to/deploy_toolbox/
-
-
-
-curl 'http://localhost:8000/run' \
-  -H 'Content-Type: application/json' \
-  -H 'Connection: keep-alive' \
-  --data-raw '{"app_name":"gym_assistant","user_id":"user_nt_nithinkumara_gmail_com_1758180625004","session_id":"session_1758180625004","new_message":{"role":"user","parts":[{"text":"Please register this user with the following information:\n\nPersonal Information:\n- Email: nt.nithinkumara@gmail.com\n- Age: 32 years\n- Gender: male\n- Height: 171 cm\n- Current Weight: 23 kg\n- Goal Weight: 76 kg\n\nFitness Profile:\n- Experience Level: beginner\n- Workout Days per Week: 3\n- Preferred Workout Types: Yoga, Swimming\n- Fitness Goals: Reduce Stress\n\nHealth Information:\n- Health Notes: asdsa\n\nPlease register this user in the system."}]},"streaming":false}'
-
 ## Project Structure
 
 This project is organized as follows:
