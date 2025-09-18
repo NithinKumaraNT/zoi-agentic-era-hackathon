@@ -10,12 +10,9 @@ os.environ.setdefault("GOOGLE_CLOUD_PROJECT", project_id)
 os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "global")
 os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
 
-# Replace with the Cloud Run service URL generated in the previous step.
-URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
-
-toolbox_client = ToolboxSyncClient(URL)
-
 def get_tools():
+    URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
+    toolbox_client = ToolboxSyncClient(URL)
     return toolbox_client.load_toolset("health-assistant-toolset")
 
 bigquery_agent = Agent(

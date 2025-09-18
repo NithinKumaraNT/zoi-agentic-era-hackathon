@@ -18,11 +18,11 @@ from google.adk.agents import Agent
 import datetime
 from toolbox_core import ToolboxClient, auth_methods, ToolboxSyncClient
 
-URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
 
-toolbox_client = ToolboxSyncClient(URL)
 
 def get_tools():
+    URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
+    toolbox_client = ToolboxSyncClient(URL)
     return toolbox_client.load_toolset("health-assistant-toolset")
 
 process_workout_plan = Agent(
