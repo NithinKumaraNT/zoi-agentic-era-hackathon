@@ -29,10 +29,10 @@ from opentelemetry.sdk.trace import TracerProvider, export
 from vertexai import agent_engines
 from vertexai.preview.reasoning_engines import AdkApp
 
-from gym_assistant.agent import root_agent
-from gym_assistant.utils.gcs import create_bucket_if_not_exists
-from gym_assistant.utils.tracing import CloudTraceLoggingSpanExporter
-from gym_assistant.utils.typing import Feedback
+from app.agent import root_agent
+from app.utils.gcs import create_bucket_if_not_exists
+from app.utils.tracing import CloudTraceLoggingSpanExporter
+from app.utils.typing import Feedback
 
 
 class AgentEngineApp(AdkApp):
