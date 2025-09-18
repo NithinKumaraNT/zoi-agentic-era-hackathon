@@ -11,7 +11,7 @@ os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "global")
 os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
 
 # Replace with the Cloud Run service URL generated in the previous step.
-URL = "http://127.0.0.1:5001"
+URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
 
 toolbox_client = ToolboxSyncClient(URL)
 

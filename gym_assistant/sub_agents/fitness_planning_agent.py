@@ -18,7 +18,7 @@ from google.adk.agents import Agent
 import datetime
 from toolbox_core import ToolboxClient, auth_methods, ToolboxSyncClient
 
-URL = "http://127.0.0.1:5001"
+URL = "https://toolbox-4wmotx3yxa-ey.a.run.app"
 
 toolbox_client = ToolboxSyncClient(URL)
 
@@ -58,6 +58,8 @@ WORKFLOW:
 5. Specify intensity using heart rate zones and specific sets/reps/rest periods
 6. Include proper warm-up and cool-down for each workout day
 7. Finally use the tool add_workout_plan to add the workout plan per day to the database.
+8. Show the workout plan to the user in markdown format with emojis that is copatabile with Mobile devices.
+So keep it short and concise.
 
 IMPORTANT: 
 Generate completely personalized plans. Each person's plan should be unique based on their specific health profile, goals, and preferences.
