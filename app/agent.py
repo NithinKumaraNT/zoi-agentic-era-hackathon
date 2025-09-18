@@ -36,7 +36,7 @@ os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
 
 
 # Create the root agent with specialized subagents
-root_agent = Agent(
+gym_assistant = Agent(
     name="gym_assistant",
     model="gemini-2.5-flash",
     instruction="""You are a helpful AI wellness coach assistant with specialized capabilities. You can help with general wellness questions and delegate tasks to specialized agents.
@@ -65,3 +65,5 @@ For other general wellness questions, you can handle them directly with your kno
         gym_progress_agent
     ],
 )
+
+root_agent = gym_assistant

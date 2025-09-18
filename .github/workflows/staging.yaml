@@ -57,13 +57,13 @@ jobs:
 
       - name: Deploy to Staging (Agent Engine)
         run: |
-          uv export --no-hashes --no-sources --no-header --no-dev --no-emit-project --no-annotate --locked > .requirements.txt
-          uv run app/agent_engine_app.py \
+          cd app && uv run adk deploy cloud_run \
             --project ${{ vars.STAGING_PROJECT_ID }} \
             --location ${{ vars.REGION }} \
             --service-account ${{ vars.APP_SA_EMAIL_STAGING }} \
-            --extra-packages app \
-            --set-env-vars="COMMIT_SHA=${{ github.sha }}"
+            --set-env-vars="COMMIT_SHA=${{ github.sha }}" \
+            --allow_origins="*" \
+            --with_ui . -- --allow-unauthenticated
 
       - name: Fetch Auth Token
         id: fetch-token
