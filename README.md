@@ -17,7 +17,7 @@ curl \
 https://europe-west3-aiplatform.googleapis.com/v1/projects/579492671276/locations/europe-west3/reasoningEngines/7789468136746516480:streamQuery\?alt\=sse -d '{
   "class_method": "stream_query",
   "input": {
-    "message": "What is the exchange rate from US dollars to Swedish Krona today?",
+    "message": "list the users?",
     "user_id": "test_user"
   }
 }'
@@ -29,6 +29,12 @@ https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/use/overview#
 
 https://googleapis.github.io/genai-toolbox/how-to/deploy_toolbox/
 
+
+
+curl 'http://localhost:8000/run' \
+  -H 'Content-Type: application/json' \
+  -H 'Connection: keep-alive' \
+  --data-raw '{"app_name":"gym_assistant","user_id":"user_nt_nithinkumara_gmail_com_1758180625004","session_id":"session_1758180625004","new_message":{"role":"user","parts":[{"text":"Please register this user with the following information:\n\nPersonal Information:\n- Email: nt.nithinkumara@gmail.com\n- Age: 32 years\n- Gender: male\n- Height: 171 cm\n- Current Weight: 23 kg\n- Goal Weight: 76 kg\n\nFitness Profile:\n- Experience Level: beginner\n- Workout Days per Week: 3\n- Preferred Workout Types: Yoga, Swimming\n- Fitness Goals: Reduce Stress\n\nHealth Information:\n- Health Notes: asdsa\n\nPlease register this user in the system."}]},"streaming":false}'
 
 ## Project Structure
 

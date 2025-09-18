@@ -1,0 +1,108 @@
+sources:
+  health-assistant-bigquery-source:
+    kind: bigquery
+    project: qwiklabs-gcp-00-a489584c5286
+    location: EU
+tools:
+  list_distinct_users:
+    kind: bigquery-sql
+    source: health-assistant-bigquery-source
+    description: |
+        Use this tool to list all distinct users in the fitness dataset.
+    statement: SELECT distinct email FROM `qwiklabs-gcp-00-a489584c5286.health_metrics.user_profiles` order by email asc;
+  get_fitness_data_for_user:
+    kind: bigquery-sql
+    source: health-assistant-bigquery-source
+    description: |
+      Use this tool to get the fitness data for a specific user.
+    parameters:
+      - name: email
+        type: string
+        description: The email of the user to get the fitness data for.
+        required: true
+    statement: |
+        SELECT * FROM `qwiklabs-gcp-00-a489584c5286.health_metrics.fitness_data` WHERE email = @email;
+  register_user:
+    kind: bigquery-sql
+    source: health-assistant-bigquery-source
+    description: |
+      Use this tool to register a new user.
+    parameters:
+        - name: email
+          type: string
+          description: The email of the user to register.
+          required: true
+        - name: age
+          type: integer
+          description: The age of the user.
+          required: true
+        - name: gender
+          type: string
+          description: The gender of the user.
+          required: true
+        - name: height_cm
+          type: integer
+          description: The height of the user in centimeters.
+          required: true
+        - name: current_weight_kg
+          type: integer
+          description: The current weight of the user in kilograms.
+          required: true
+        - name: goal_weight_kg
+          type: integer
+          description: The goal weight of the user in kilograms.
+          required: true
+        - name: experience_level
+          type: string
+          description: The user's fitness experience level (e.g., Beginner, Intermediate, Advanced).
+          required: true
+        - name: workout_days_per_week
+          type: integer
+          description: The number of workout days per week the user prefers.
+          required: true
+        - name: preferred_workout_types
+          type: string
+          description: The preferred workout types of the user.
+          required: true
+        - name: fitness_goals
+          type: string
+          description: The fitness goals of the user.
+          required: true
+        - name: health_notes
+          type: string
+          description: The health notes of the user.
+    statement: |
+      INSERT INTO `qwiklabs-gcp-00-a489584c5286.health_metrics.user_profiles`
+        (
+          email, 
+          age, 
+          gender, 
+          height_cm, 
+          current_weight_kg, 
+          goal_weight_kg, 
+          experience_level, 
+          workout_days_per_week, 
+          preferred_workout_types, 
+          fitness_goals, 
+          health_notes
+        )
+      VALUES
+        (
+          @email, 
+          @age, 
+          @gender, 
+          @height_cm, 
+          @current_weight_kg, 
+          @goal_weight_kg, 
+          @experience_level, 
+          @workout_days_per_week, 
+          @preferred_workout_types, 
+          @fitness_goals, 
+          @health_notes
+        );
+toolsets:
+  health-assistant-toolset:
+    - list_distinct_users
+    - get_fitness_data_for_user
+    - register_user
+

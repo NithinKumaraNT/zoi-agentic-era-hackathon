@@ -7,11 +7,17 @@ playground:
 	@echo "==============================================================================="
 	@echo "| 🚀 Starting your agent playground...                                        |"
 	@echo "|                                                                             |"
-	@echo "| 💡 Try asking: What's the weather in San Francisco?                         |"
-	@echo "|                                                                             |"
 	@echo "| 🔍 IMPORTANT: Select the 'app' folder to interact with your agent.          |"
 	@echo "==============================================================================="
 	uv run adk web . --port 8501 --reload_agents
+
+playground-api:
+	@echo "==============================================================================="
+	@echo "| 🚀 Starting your agent playground...                                        |"
+	@echo "|                                                                             |"
+	@echo "| 🔍 IMPORTANT: Select the 'app' folder to interact with your agent.          |"
+	@echo "==============================================================================="
+	cd app && uv run adk api_server --allow_origins="*"
 
 # Deploy the agent remotely
 backend:

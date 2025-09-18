@@ -1,0 +1,21 @@
+services:
+  mcp-db-toolbox:
+    image:  us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:latest
+    hostname: toolbox
+    platform: linux/amd64
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./tools.yaml:/config/tools.yaml
+      - ${HOME}/.config/gcloud:/config/gcloud:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/config/gcloud/application_default_credentials.json
+    command: 
+      - "toolbox"
+      - "--tools-file"
+      - "/config/tools.yaml"
+      - "--address"
+      - "0.0.0.0"
+      - "--log-level"
+      - "info"
+    
