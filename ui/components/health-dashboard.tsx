@@ -112,7 +112,7 @@ export function HealthDashboard() {
       const workoutPlanMessage = `Please create a personalized workout plan based on the following user requirements:
 
 ${workoutPlanText}
-user_email: margarita.vaquer-melo@zoi.tech
+user_email: nt.nithinkumara@gmail.com
 `
 
       // Use streaming API
