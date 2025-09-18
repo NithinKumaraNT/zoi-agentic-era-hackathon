@@ -19,7 +19,7 @@ on:
     branches:
       - main
     paths:
-      - 'gym_assistant/**'
+      - 'app/**'
       - 'data_ingestion/**'
       - 'tests/**'
       - 'deployment/**'
@@ -58,7 +58,7 @@ jobs:
       - name: Deploy to Staging (Agent Engine)
         run: |
           uv export --no-hashes --no-sources --no-header --no-dev --no-emit-project --no-annotate --locked > .requirements.txt
-          uv run gym_assistant/agent_engine_app.py \
+          uv run app/agent_engine_app.py \
             --project ${{ vars.STAGING_PROJECT_ID }} \
             --location ${{ vars.REGION }} \
             --service-account ${{ vars.APP_SA_EMAIL_STAGING }} \
