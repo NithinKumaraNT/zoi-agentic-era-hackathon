@@ -1,7 +1,27 @@
-# AI wellness coach
+# AI Wellness Coach
 
-A base ReAct agent built with Google's Agent Development Kit (ADK)
-Agent generated with [`googleCloudPlatform/agent-starter-pack`](https://github.com/GoogleCloudPlatform/agent-starter-pack) version `0.14.1`
+A comprehensive AI-powered wellness coaching system built with Google's Agent Development Kit (ADK) and featuring a modern Next.js frontend. This application provides personalized fitness planning, nutrition guidance, and progress tracking through intelligent agent interactions.
+
+![First Page](docs/assets/first_page.png)
+
+## Features
+
+### 🏋️ Workout Planning
+Generate personalized workout plans based on user preferences, fitness level, and goals.
+
+![Generate Workout Plan](docs/assets/generate_work_out_plan.png)
+
+### 📊 Progress Tracking
+Monitor your fitness journey with detailed progress reports and analytics.
+
+![Gym Progress Report](docs/assets/gym_progress_report.png)
+
+### 🤖 Multi-Agent Architecture
+The system uses multiple specialized agents working together to provide comprehensive wellness guidance.
+
+![Agent Interaction Graph](docs/assets/agent_interaction_graph.png)
+
+![Agent Interaction Sequence](docs/assets/agents_interaction_seq_diagram.png)
 
 
 ## Project codes
@@ -45,8 +65,16 @@ health-assistant/
 ├── app/                 # Core application code
 │   ├── agent.py         # Main agent logic
 │   ├── agent_engine_app.py # Agent Engine application logic
+│   ├── sub_agents/      # Specialized agent modules
+│   ├── tools/           # Agent tools and configurations
 │   └── utils/           # Utility functions and helpers
-├── .github/             # CI/CD pipeline configurations for GitHub Actions
+├── ui/                  # Next.js frontend application
+│   ├── app/             # Next.js app directory
+│   ├── components/      # React components
+│   ├── lib/             # Utility functions
+│   └── public/          # Static assets
+├── docs/                # Documentation and assets
+│   └── assets/          # Images and diagrams
 ├── deployment/          # Infrastructure and deployment scripts
 ├── notebooks/           # Jupyter notebooks for prototyping and evaluation
 ├── tests/               # Unit, integration, and load tests
@@ -59,30 +87,87 @@ health-assistant/
 
 Before you begin, ensure you have:
 - **uv**: Python package manager (used for all dependency management in this project) - [Install](https://docs.astral.sh/uv/getting-started/installation/) ([add packages](https://docs.astral.sh/uv/concepts/dependencies/) with `uv add <package>`)
+- **Node.js & npm**: For frontend development - [Install](https://nodejs.org/)
 - **Google Cloud SDK**: For GCP services - [Install](https://cloud.google.com/sdk/docs/install)
 - **Terraform**: For infrastructure deployment - [Install](https://developer.hashicorp.com/terraform/downloads)
 - **make**: Build automation tool - [Install](https://www.gnu.org/software/make/) (pre-installed on most Unix-based systems)
 
 
-## Quick Start (Local Testing)
+## Environment Setup
 
-Install required packages and launch the local development environment:
+**Important**: Before running the application, you need to set up environment variables in both the root directory and the `ui` folder.
+
+### Root Directory Environment Variables
+Create a `.env` file in the root directory based on `.env.dev`:
 
 ```bash
-make install && make playground
+cp .env.dev .env
 ```
+
+Required variables:
+- `GOOGLE_GENAI_USE_VERTEXAI`: Set to "False" for local development
+- `GOOGLE_API_KEY`: Your Google API key for Nano banana and veo3
+- `GOOGLE_CLOUD_PROJECT`: Your Google Cloud project ID
+- `GOOGLE_CLOUD_LOCATION`: Cloud deployment location (e.g., "europe-west3")
+
+### UI Directory Environment Variables
+Create a `.env` file in the `ui` folder based on `.env.dev`:
+
+```bash
+cd ui
+cp .env.dev .env
+```
+
+Required variables:
+- `NEXT_PUBLIC_API_BASE_URL`: The URL of your backend API
+- `NEXT_PUBLIC_SKIP_ONBOARDING`: Set to "false" for development
+- `NODE_ENV`: Set to "development" for local development
+- `ADK_ROOT_AGENT`: Set to "app" (the folder containing agent.py)
+
+## Quick Start (Local Testing)
+
+### Backend Setup
+Install Python dependencies and start the backend API server:
+
+```bash
+make install
+make playground-api
+```
+
+### Frontend Setup
+In a separate terminal, navigate to the UI folder and start the frontend:
+
+```bash
+cd ui
+npm install
+npm run dev
+```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
 
 ## Commands
 
+### Backend Commands
 | Command              | Description                                                                                 |
 | -------------------- | ------------------------------------------------------------------------------------------- |
 | `make install`       | Install all required dependencies using uv                                                  |
 | `make playground`    | Launch Streamlit interface for testing agent locally and remotely |
+| `make playground-api`| Start the backend API server for frontend integration |
 | `make backend`       | Deploy agent to Agent Engine |
 | `make test`          | Run unit and integration tests                                                              |
 | `make lint`          | Run code quality checks (codespell, ruff, mypy)                                             |
 | `make setup-dev-env` | Set up development environment resources using Terraform                         |
 | `uv run jupyter lab` | Launch Jupyter notebook                                                                     |
+
+### Frontend Commands
+| Command              | Description                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| `npm install`        | Install frontend dependencies (run in `ui/` folder) |
+| `npm run dev`        | Start development server (run in `ui/` folder) |
+| `npm run build`      | Build production version (run in `ui/` folder) |
+| `npm run start`      | Start production server (run in `ui/` folder) |
 
 For full command options and usage, refer to the [Makefile](Makefile).
 
